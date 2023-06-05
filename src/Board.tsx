@@ -50,13 +50,15 @@ const humanMove=(index:number)=>{
       }
 }
   return gameStatus===game_status.choose_player ? (
-    <div>
+    <Paragraph>
         <p>
             Choose player
         </p>
+        <Row>
         <button onClick={()=>selectPlayer(player_x)}>X</button>
         <button onClick={()=>selectPlayer(player_0)}>0</button>
-    </div>
+        </Row>
+    </Paragraph>
   ):(
     <Container>
         {newGrid.map((value,index)=>{
@@ -89,3 +91,13 @@ border:1px solid green;
 const Marker=styled.p`
 font-size:68px;
 `
+const Row=styled.div`
+display:flex;
+width:150px;
+justify-content:space-between;`
+
+const Paragraph=styled.div`
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-bottom:20px;`
