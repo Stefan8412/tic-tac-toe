@@ -4,14 +4,30 @@ import styled from 'styled-components'
 const grid=new Array(3**2).fill(null)
 const player_x=1;
 const player_0=2;
+const game_status={
+    in_progres:"in_progess",
+    choose_player:"choose_player",
+    over:"over"
+}
+
 
 export default function Board() {
 const [newGrid,setNewGrid]=useState(grid);
-const [players,setPlayers]=useState({
-    human:player_x,
-    computer:player_0
+const [players,setPlayers]=useState<Record<string,number| null>>({
+    human:null,
+    computer:null
 })
-const move = (index: number, player: number ) => {
+const [gameStatus,setGameStatus]=useState(game_status.choose_player)
+
+const switchPlayer=(player:number)=>{
+    return player === player_x ? player_0: player_x
+}
+
+const selectPlayer=(option:number)=>{
+    setPlayers({human:option,computer:switchPlayer(option)})
+    setGameStatus(game_status.in_progres)
+}
+const move = (index: number, player: number | null ) => {
     setNewGrid((newGrid) => {
       const gridCopy = newGrid.concat();
       gridCopy[index] = player;
@@ -33,7 +49,15 @@ const humanMove=(index:number)=>{
      computerMove()
       }
 }
-  return (
+  return gameStatus===game_status.choose_player ? (
+    <div>
+        <p>
+            Choose player
+        </p>
+        <button onClick={()=>selectPlayer(player_x)}>X</button>
+        <button onClick={()=>selectPlayer(player_0)}>0</button>
+    </div>
+  ):(
     <Container>
         {newGrid.map((value,index)=>{
 const isActive=value !== null;
