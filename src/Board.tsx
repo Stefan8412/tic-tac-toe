@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
+import Deck from "./Deck";
+
+const board = new Deck();
 
 const grid = new Array(3 ** 2).fill(null);
 const player_x = 1;
 const player_0 = 2;
+const draw = 0;
 const game_status = {
   in_progres: "in_progess",
   choose_player: "choose_player",
@@ -18,6 +22,31 @@ export default function Board() {
   });
   const [gameStatus, setGameStatus] = useState(game_status.choose_player);
   const [nextMove, setNextMove] = useState<null | number>(null);
+  const [winner, setWinner] = useState<null | string>(null);
+
+  useEffect(() => {
+    const boardWinner = board.calculateWinner(newGrid);
+    const declareWinner = (winner: number) => {
+      let winnerStr = "";
+      switch (winner) {
+        case player_x:
+          winnerStr = "Player X wins!";
+          break;
+        case player_0:
+          winnerStr = "Player O wins!";
+          break;
+        case draw:
+        default:
+          winnerStr = "It's a draw";
+      }
+      setGameStatus(game_status.over);
+      setWinner(winnerStr);
+    };
+
+    if (boardWinner !== null && gameStatus !== game_status.over) {
+      declareWinner(boardWinner);
+    }
+  }, [gameStatus, newGrid, nextMove]);
 
   const switchPlayer = (player: number) => {
     return player === player_x ? player_0 : player_x;
