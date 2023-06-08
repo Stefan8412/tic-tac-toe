@@ -99,26 +99,45 @@ export default function Board() {
       setNextMove(players.computer);
     }
   };
-  return gameStatus === game_status.choose_player ? (
-    <Paragraph>
-      <p>Choose player</p>
-      <Row>
-        <button onClick={() => selectPlayer(player_x)}>X</button>
-        <button onClick={() => selectPlayer(player_0)}>0</button>
-      </Row>
-    </Paragraph>
-  ) : (
-    <Container>
-      {newGrid.map((value, index) => {
-        const isActive = value !== null;
-        return (
-          <Square key={index} onClick={() => humanMove(index)}>
-            {isActive && <Marker>{value === player_x ? "x" : "o"}</Marker>}
-          </Square>
-        );
-      })}
-    </Container>
-  );
+  const newGame = () => {
+    setGameStatus(game_status.choose_player);
+    setNewGrid(grid);
+  };
+  switch (gameStatus) {
+    case game_status.choose_player:
+    default:
+      return (
+        <div>
+          <Paragraph>
+            <p>Choose player</p>
+            <Row>
+              <button onClick={() => selectPlayer(player_x)}>X</button>
+              <button onClick={() => selectPlayer(player_0)}>0</button>
+            </Row>
+          </Paragraph>
+        </div>
+      );
+    case game_status.in_progres:
+      return (
+        <Container>
+          {newGrid.map((value, index) => {
+            const isActive = value !== null;
+            return (
+              <Square key={index} onClick={() => humanMove(index)}>
+                {isActive && <Marker>{value === player_x ? "x" : "o"}</Marker>}
+              </Square>
+            );
+          })}
+        </Container>
+      );
+    case game_status.over:
+      return (
+        <div>
+          <p>{winner}</p>
+          <Button onClick={newGame}>Start game</Button>
+        </div>
+      );
+  }
 }
 
 const Container = styled.div`
@@ -150,4 +169,20 @@ const Paragraph = styled.div`
   flex-direction: column;
   align-items: center;
   margin-bottom: 20px;
+`;
+
+const Button = styled.button`
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
 `;

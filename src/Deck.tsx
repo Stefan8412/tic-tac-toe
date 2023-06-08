@@ -1,6 +1,6 @@
 const draw = 0;
 type Grid = Array<null | number>;
-
+//constructor means when we call the function ( here, creating a new object ), we can optionally pass grid argument , and this grid argument should
 export default class Deck {
   grid: Grid;
   constructor(grid?: Grid) {
